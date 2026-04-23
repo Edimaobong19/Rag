@@ -9,7 +9,16 @@ app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-CSV_FILE = os.path.join(os.path.dirname(__file__), 'groups.csv')
+# Use data directory for persistent storage on Render
+DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
+os.makedirs(DATA_DIR, exist_ok=True)
+CSV_FILE = os.path.join(DATA_DIR, 'groups.csv')
+
+# Create CSV file if it doesn't exist
+if not os.path.exists(CSV_FILE):
+    with open(CSV_FILE, 'w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(['timestamp', 'name', 'group'])
 
 def read_csv():
     """Read all assignments from CSV file"""
@@ -153,6 +162,6 @@ def handle_disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    print("Starting Group Assignment Roulette Server...")
+    print("Starting Group Assignment Shuffler Server...")
     print("Server running on http://localhost:5000")
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)

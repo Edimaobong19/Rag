@@ -1,0 +1,30 @@
+services:
+  # Backend API Service
+  - type: web
+    name: group-shuffler-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --worker-class eventlet -w 1 app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+    disk:
+      name: csv-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
+
+  # Frontend Static Site
+  - type: web
+    name: group-shuffler-frontend
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: VITE_API_URL
+        sync: false

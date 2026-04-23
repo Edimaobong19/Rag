@@ -47,6 +47,7 @@ coverage/
 backend/__pycache__/
 backend/*.pyc
 backend/.env
+backend/data/
 
 # Frontend
 frontend/node_modules/
