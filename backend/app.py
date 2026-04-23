@@ -9,10 +9,8 @@ app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-# Use data directory for persistent storage on Render
-DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
-os.makedirs(DATA_DIR, exist_ok=True)
-CSV_FILE = os.path.join(DATA_DIR, 'groups.csv')
+# Use app directory for CSV storage (free tier - data resets on redeploy)
+CSV_FILE = os.path.join(os.path.dirname(__file__), 'groups.csv')
 
 # Create CSV file if it doesn't exist
 if not os.path.exists(CSV_FILE):

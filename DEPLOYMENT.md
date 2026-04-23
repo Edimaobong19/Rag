@@ -38,13 +38,7 @@ git push -u origin main
    PYTHON_VERSION=3.12.0
    ```
 
-5. **Add Persistent Disk** (for CSV storage):
-   - Click "Add Disk"
-   - **Name**: `csv-data`
-   - **Mount Path**: `/opt/render/project/src/data`
-   - **Size**: `1 GB`
-
-6. **Click "Create Web Service"**
+5. **Click "Create Web Service"**
 
 7. **Note the backend URL** (e.g., `https://group-shuffler-backend.onrender.com`)
 
@@ -90,6 +84,16 @@ After both services are deployed:
 
 ## Important Notes
 
+### Data Persistence on Free Tier
+- **Free tier does NOT support persistent disks**
+- CSV data is stored in the app directory
+- **Data will be lost when the service redeploys** (code changes, manual redeploy)
+- Data persists between cold starts (15 min inactivity) but NOT across redeployments
+- For permanent data storage, consider:
+  - Upgrading to paid plan with persistent disk ($7/month)
+  - Using a free database service (MongoDB Atlas, Supabase)
+  - Exporting CSV data manually before redeploying
+
 ### WebSocket Limitations on Render Free Tier
 - Render's free tier may have limitations with WebSocket connections
 - If WebSocket doesn't work, the app will fall back to HTTP polling
@@ -123,9 +127,10 @@ After both services are deployed:
 - Consider using HTTP-only mode if WebSocket is blocked
 
 ### CSV data lost
-- Verify disk is mounted correctly
-- Check disk mount path in render.yaml
-- Ensure data directory exists
+- This is expected on free tier after redeployment
+- Data persists during normal operation (cold starts are OK)
+- Only lost when you redeploy or push new code
+- To preserve data: Export CSV before redeploying, or upgrade to paid plan
 
 ## Local Development
 
